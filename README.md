@@ -24,4 +24,4 @@ or:
 make run-list
 ```
 
-All good ! 
+Feel free to change the port and the expiration duration for the cache in the config.json !
