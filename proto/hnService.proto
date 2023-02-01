@@ -1,0 +1,38 @@
+//protoc --go_out=plugins=grpc:../pb/ nhService.proto
+
+syntax = "proto3";
+package hnService;
+import "google/api/annotations.proto";
+
+option go_package = ".;hnService";
+
+
+message Empty {}
+
+message Story {
+  string title = 1;
+  string url = 2;
+}
+
+message TopStories {
+  repeated Story stories = 1;
+}
+
+message TopStoriesRequest{}
+
+message WhoisRequest{
+    string user = 1;
+}
+
+
+message User {
+  string nick = 1;
+  uint64 karma = 2;
+  string about = 3;
+  string joined_at = 4;
+}
+
+service HnService {
+  rpc GetTopStories(TopStoriesRequest) returns (TopStories){}
+  rpc Whois(WhoisRequest) returns (User){}
+}

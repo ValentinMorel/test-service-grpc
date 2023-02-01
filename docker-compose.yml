@@ -1,0 +1,9 @@
+version: '3'
+services:
+  hn-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hnService
+    ports:
+      - "8080:8080"
