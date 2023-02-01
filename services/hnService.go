@@ -9,6 +9,7 @@ import (
 
 	"github.com/peterhellberg/hn"
 	"github.com/jellydator/ttlcache/v3"
+	"errors"
 )
 
 
@@ -31,7 +32,7 @@ func (s *Server) GetTopStories(ctx context.Context, req *pb.TopStoriesRequest) (
 	stories := make([]*pb.Story, 10)
 	ids, err := s.HnClient.TopStories()
 	if err != nil {
-		panic(err)
+		return &pb.TopStories{}, errors.New("Encountered an unexpected behavior from the hacker news API, TopStories method")
 	}
 
 	for i, id := range ids[:10] {
@@ -54,15 +55,16 @@ func (s *Server) GetTopStories(ctx context.Context, req *pb.TopStoriesRequest) (
 
 func (s *Server) Whois(ctx context.Context, in *pb.WhoisRequest) (*pb.User, error) {
 	
-	if u, err := hn.DefaultClient.User(in.User); err == nil {
-		year, month, day := time.Unix(int64(u.Created), 0).Date()
-		return &pb.User{
-			Nick:     u.ID,
-			Karma:    uint64(u.Karma),
-			About:    u.About,
-			JoinedAt: fmt.Sprintf("%d-%d-%d", year, month, day),
-		}, nil
+	u, err := hn.DefaultClient.User(in.User)
+	if err != nil {
+		return &pb.User{}, errors.New("Encountered an unexpected behavior from the hacker news API, User method")
 	}
-	return &pb.User{}, nil
+	year, month, day := time.Unix(int64(u.Created), 0).Date()
+	return &pb.User{
+		Nick:     u.ID,
+		Karma:    uint64(u.Karma),
+		About:    u.About,
+		JoinedAt: fmt.Sprintf("%d-%d-%d", year, month, day),
+	}, nil
 
 }
