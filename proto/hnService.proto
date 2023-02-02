@@ -2,12 +2,8 @@
 
 syntax = "proto3";
 package hnService;
-import "google/api/annotations.proto";
 
 option go_package = ".;hnService";
-
-
-message Empty {}
 
 message Story {
   string title = 1;
